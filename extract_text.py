@@ -1,18 +1,13 @@
-import PyPDF2
+import fitz  # PyMuPDF
 import json
 
 def extract_text_from_pdf(pdf_path):
     try:
-        with open(pdf_path, 'rb') as file:
-            pdf_reader = PyPDF2.PdfFileReader(file)
-            
+        with fitz.open(pdf_path) as pdf_document:
             text = ""
-            
-            # Iterate through all pages in the PDF
-            for page_number in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(page_number)
-                text += page.extractText()
-                
+            for page_number in range(pdf_document.page_count):
+                page = pdf_document[page_number]
+                text += page.get_text()
             return text
     except Exception as e:
         print(f"Error: {e}")
